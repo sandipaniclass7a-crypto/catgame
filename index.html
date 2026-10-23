@@ -1,0 +1,417 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meow Ball Adventure 🐱</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Trebuchet MS', Arial, sans-serif;
+  background: linear-gradient(135deg, #ffe3f1, #d8f5ff);
+  color: #533b65;
+  text-align: center;
+  min-height: 100vh;
+  padding: 20px 12px;
+}
+
+h1 {
+  font-size: clamp(28px, 6vw, 43px);
+  margin: 12px 0;
+  color: #ff65a3;
+  text-shadow: 2px 3px white;
+}
+
+.subtitle {
+  margin-bottom: 18px;
+  color: #775d89;
+}
+
+.game-info {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.pill {
+  background: white;
+  padding: 10px 18px;
+  border-radius: 20px;
+  font-weight: bold;
+  box-shadow: 0 4px 10px #8d6fa51c;
+}
+
+#game {
+  position: relative;
+  width: min(100%, 700px);
+  height: 390px;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 5px solid white;
+  border-radius: 25px;
+  background:
+    radial-gradient(circle at 20% 20%, #ffffffaa 0 4px, transparent 5px),
+    radial-gradient(circle at 80% 35%, #ffffffbb 0 5px, transparent 6px),
+    linear-gradient(#a8e6ff, #e3faff 75%, #a8e8a4 75%);
+  box-shadow: 0 12px 30px #7b68a533;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+.cloud {
+  position: absolute;
+  font-size: 45px;
+  opacity: .8;
+}
+
+.cloud.one { top: 20px; left: 8%; }
+.cloud.two { top: 65px; right: 8%; }
+
+#cat {
+  position: absolute;
+  left: 60px;
+  bottom: 55px;
+  font-size: 58px;
+  line-height: 1;
+  z-index: 2;
+  user-select: none;
+  transition: bottom .08s linear;
+}
+
+#ball {
+  position: absolute;
+  right: 40px;
+  bottom: 60px;
+  font-size: 34px;
+  line-height: 1;
+  z-index: 3;
+  user-select: none;
+}
+
+.ground {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 48px;
+  background: #7fd78b;
+  border-top: 5px solid #a4ed9c;
+}
+
+#overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: #fff6f0c9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+#overlay h2 {
+  font-size: 30px;
+  color: #ff65a3;
+  margin-bottom: 8px;
+}
+
+#overlay p {
+  margin: 7px 0 15px;
+}
+
+button {
+  border: none;
+  border-radius: 25px;
+  padding: 13px 25px;
+  background: linear-gradient(135deg, #ff73b5, #a97bff);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #9b64c5;
+  transition: transform .15s;
+}
+
+button:hover { transform: translateY(-2px); }
+button:active { transform: translateY(2px); }
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 17px auto;
+  flex-wrap: wrap;
+}
+
+#jumpBtn {
+  min-width: 150px;
+  background: linear-gradient(135deg, #ff9f43, #ff6f91);
+}
+
+.help {
+  margin: 15px auto;
+  max-width: 600px;
+  line-height: 1.8;
+  font-size: 14px;
+}
+
+footer {
+  padding: 15px 0;
+  font-size: 13px;
+  color: #826c93;
+}
+
+@media (max-width: 480px) {
+  #game { height: 340px; }
+  #cat { left: 35px; }
+  #ball { right: 25px; }
+}
+</style>
+</head>
+
+<body>
+
+<h1>🐱 Meow Ball Adventure</h1>
+<p class="subtitle">Help the kitty dodge the flying balls!</p>
+
+<div class="game-info">
+  <div class="pill">⭐ Score: <span id="score">0</span></div>
+  <div class="pill">🏆 Best: <span id="best">0</span></div>
+  <div class="pill">❤️ Lives: <span id="lives">3</span></div>
+</div>
+
+<div id="game" aria-label="Cat jumping game">
+  <div class="cloud one">☁️</div>
+  <div class="cloud two">☁️</div>
+
+  <div id="cat">🐱</div>
+  <div id="ball">⚽</div>
+  <div class="ground"></div>
+
+  <div id="overlay">
+    <h2 id="overlayTitle">Ready, Kitty? 😻</h2>
+    <p id="overlayText">Jump over the balls and collect points!</p>
+    <button id="startBtn">▶ START GAME</button>
+  </div>
+</div>
+
+<div class="controls">
+  <button id="jumpBtn">🐾 JUMP!</button>
+  <button id="restartBtn">🔄 RESTART</button>
+</div>
+
+<p class="help">
+  🎮 <b>How to play:</b> Tap the game, press SPACE or ↑,
+  or use the JUMP button to avoid the balls.
+  Every successful dodge gives you a point!
+</p>
+
+<footer>Made with 💗 for cat lovers everywhere</footer>
+
+<script>
+const game = document.getElementById("game");
+const cat = document.getElementById("cat");
+const ball = document.getElementById("ball");
+const overlay = document.getElementById("overlay");
+const startBtn = document.getElementById("startBtn");
+const jumpBtn = document.getElementById("jumpBtn");
+const restartBtn = document.getElementById("restartBtn");
+
+const scoreEl = document.getElementById("score");
+const bestEl = document.getElementById("best");
+const livesEl = document.getElementById("lives");
+const overlayTitle = document.getElementById("overlayTitle");
+const overlayText = document.getElementById("overlayText");
+
+let running = false;
+let score = 0;
+let lives = 3;
+let ballX = 0;
+let ballSpeed = 4;
+let jumpHeight = 0;
+let velocity = 0;
+let lastTime = 0;
+let animationId = null;
+let passed = false;
+let invulnerable = 0;
+let best = 0;
+
+try {
+  best = Number(localStorage.getItem("meowBest")) || 0;
+} catch (e) {}
+
+bestEl.textContent = best;
+
+function resetGame() {
+  if (animationId !== null) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+
+  running = false;
+  score = 0;
+  lives = 3;
+  ballX = game.clientWidth + 20;
+  ballSpeed = 4;
+  jumpHeight = 0;
+  velocity = 0;
+  lastTime = 0;
+  passed = false;
+  invulnerable = 0;
+
+  scoreEl.textContent = score;
+  livesEl.textContent = lives;
+  cat.style.bottom = "55px";
+  cat.style.opacity = "1";
+  ball.style.left = ballX + "px";
+  ball.style.right = "auto";
+}
+
+function startGame() {
+  resetGame();
+  overlay.style.display = "none";
+  running = true;
+  animationId = requestAnimationFrame(loop);
+}
+
+function jump() {
+  if (!running) return;
+
+  if (jumpHeight === 0) {
+    velocity = 10.5;
+  }
+}
+
+function gameOver() {
+  running = false;
+
+  if (animationId !== null) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+
+  overlay.style.display = "flex";
+  overlayTitle.textContent =
+    lives <= 0 ? "Game Over! 😿" : "Time to Rest! 🐱";
+  overlayText.textContent =
+    "Your score: " + score + ". Can you beat your best?";
+  startBtn.textContent = "🔄 PLAY AGAIN";
+}
+
+function loop(timestamp) {
+  if (!running) return;
+
+  const dt = lastTime
+    ? Math.min((timestamp - lastTime) / 16.67, 2)
+    : 1;
+
+  lastTime = timestamp;
+
+  // Kitty jump physics
+  jumpHeight += velocity * dt;
+  velocity -= 0.55 * dt;
+
+  if (jumpHeight < 0) {
+    jumpHeight = 0;
+    velocity = 0;
+  }
+
+  cat.style.bottom = (55 + jumpHeight) + "px";
+
+  // Ball movement
+  ballX -= ballSpeed * dt;
+  ball.style.left = ballX + "px";
+
+  if (invulnerable > 0) {
+    invulnerable -= dt;
+    cat.style.opacity =
+      Math.floor(invulnerable / 3) % 2 ? "0.4" : "1";
+  } else {
+    cat.style.opacity = "1";
+  }
+
+  const catLeft = 60;
+  const catRight = catLeft + 45;
+  const ballLeft = ballX + 5;
+  const ballRight = ballX + 38;
+
+  // Collision detection
+  const isNear =
+    ballRight > catLeft + 8 &&
+    ballLeft < catRight - 5 &&
+    jumpHeight < 35;
+
+  if (isNear && invulnerable <= 0) {
+    lives--;
+    livesEl.textContent = lives;
+    invulnerable = 65;
+    ballX = -100;
+
+    if (lives <= 0) {
+      gameOver();
+      return;
+    }
+  }
+
+  // Reward successful dodges
+  if (ballX + 38 < catLeft && !passed) {
+    score++;
+    scoreEl.textContent = score;
+    passed = true;
+    ballSpeed = Math.min(10, 4 + score * 0.15);
+
+    if (score > best) {
+      best = score;
+      bestEl.textContent = best;
+
+      try {
+        localStorage.setItem("meowBest", best);
+      } catch (e) {}
+    }
+  }
+
+  // Spawn the next ball
+  if (ballX < -50) {
+    ballX = game.clientWidth + 30;
+    passed = false;
+  }
+
+  animationId = requestAnimationFrame(loop);
+}
+
+startBtn.addEventListener("click", startGame);
+restartBtn.addEventListener("click", startGame);
+jumpBtn.addEventListener("click", jump);
+
+game.addEventListener("pointerdown", (event) => {
+  if (event.target.closest("button")) return;
+  jump();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.code === "Space" || event.code === "ArrowUp") {
+    event.preventDefault();
+
+    if (!running) {
+      startGame();
+    } else {
+      jump();
+    }
+  }
+});
+
+resetGame();
+</script>
+
+</body>
+</html>
